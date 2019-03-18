@@ -26,7 +26,7 @@ void Fano::generateCodes() {
     if (!schema.empty()) dfs(0, (int) schema.size());
 }
 
-void Fano::dfs(int start, int end) {
+void Fano::dfs(const int start, const int end) {
     int border = start;
     for (auto i = start + 1; i < end; i++) {
         long long leftBorder = schemaCumulative[border] - (start == 0 ? 0 : schemaCumulative[start - 1]);

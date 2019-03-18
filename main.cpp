@@ -17,6 +17,7 @@
 #include "codes/Fano.h"
 #include "codes/ShannonImpl.h"
 #include "codes/HilbertMoore.h"
+#include "codes/TernaryHuffman.h"
 
 #define input ios_base::sync_with_stdio(0)
 #define itn int
@@ -26,6 +27,30 @@ typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<ll, ll> pll;
 typedef pair<int, int> pii;
+
+namespace std {
+    template<>
+    struct hash<pair<int, int>> {
+        size_t operator()(const pair<int, int> &a) const {
+            return hash<ll>{}(((size_t)
+            a.first << 32) +a.second);
+        }
+    };
+
+    template<>
+    struct hash<pair<char, char>> {
+        size_t operator()(const pair<char, char> &a) const {
+            return hash<ll>{}(((size_t) a.first << 32) + a.second);
+        }
+    };
+
+    template<>
+    struct hash<pair<wchar_t, wchar_t >> {
+        size_t operator()(const pair<wchar_t, wchar_t> &a) const {
+            return hash<ll>{}(((size_t) a.first << 32) + a.second);
+        }
+    };
+}
 
 struct schemaPairItem {
     wchar_t first, second;
@@ -210,14 +235,15 @@ void tmp() {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    wifstream fin("war and peace.txt");
+    wifstream fin("f2.txt");
     wofstream fout("out.txt");
     wstring s((istreambuf_iterator<wchar_t>(fin)), (istreambuf_iterator<wchar_t>()));
     s = prepString(s);
     Huffman huffman(s);
+    HilbertMoore hilbertMoore(s);
     Fano fano(s);
     ShannonImpl shannon(s);
-    HilbertMoore hilbertMoore(s);
+    TernaryHuffman ternaryHuffman(s);
 
     fout << endl;
     fout << endl;
@@ -232,6 +258,37 @@ int main() {
         }
         fout << endl;
     }
+
+    fout << endl;
+    fout << endl;
+    fout << endl;
+    fout << endl;
+
+    mp = ternaryHuffman.getSortedCodes();
+    for (const auto &x : mp) {
+        fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
+             << setw(5) << symbols.at(x.first).first << L"  ";
+        for (const auto &bl : x.second) {
+            fout << bl;
+        }
+        fout << endl;
+    }
+
+    fout << endl;
+    fout << endl;
+    fout << endl;
+    fout << endl;
+
+    auto mp1 = ternaryHuffman.getSortedTernaryCodes();
+    for (const auto &x : mp1) {
+        fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
+             << setw(5) << symbols.at(x.first).first << L"  ";
+        for (const auto &bl : x.second) {
+            fout << bl;
+        }
+        fout << endl;
+    }
+    return 0;
     fout << endl;
     fout << endl;
     fout << endl;
