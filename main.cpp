@@ -40,14 +40,16 @@ namespace std {
     template<>
     struct hash<pair<char, char>> {
         size_t operator()(const pair<char, char> &a) const {
-            return hash<ll>{}(((size_t) a.first << 32) + a.second);
+            return hash<ll>{}(((size_t)
+            a.first << 32) +a.second);
         }
     };
 
     template<>
     struct hash<pair<wchar_t, wchar_t >> {
         size_t operator()(const pair<wchar_t, wchar_t> &a) const {
-            return hash<ll>{}(((size_t) a.first << 32) + a.second);
+            return hash<ll>{}(((size_t)
+            a.first << 32) +a.second);
         }
     };
 }
@@ -63,6 +65,10 @@ struct schemaItem {
     int count;
     double p;
 };
+
+inline double log3(const double x) {
+    return log(x) / log(3.0);
+}
 
 wchar_t to_lower(wchar_t ch) {
     static unordered_map<wchar_t, wchar_t> m;
@@ -111,7 +117,12 @@ void gen() {
     }
 }
 
-double singleEntropy(const wstring &s, wofstream *fout = nullptr) {
+double singleEntropy(const wstring &s, bool binaryLog = true, wofstream *fout = nullptr) {
+    function<double(double)> logX;
+    if (binaryLog)
+        logX = ::log2;
+    else
+        logX = ::log3;
     unordered_map<wchar_t, int> m;
     m.reserve(1U << 10);
     double h = 0;
@@ -120,9 +131,9 @@ double singleEntropy(const wstring &s, wofstream *fout = nullptr) {
     });
     vector<schemaItem> v;
     v.reserve(m.size());
-    for_each(m.begin(), m.end(), [&h, &s, &v](auto &t) {
+    for_each(m.begin(), m.end(), [&h, &s, &v, &logX](auto &t) {
         double p = t.second * 1.0 / s.size();
-        h += p * log2(p);
+        h += p * logX(p);
         v.push_back({t.first, t.second, p});
     });
     sort(v.begin(), v.end(), [](const auto &a, const auto &b) {
@@ -167,7 +178,7 @@ double doubleEntropy(const wstring &s, wofstream *fout = nullptr) {
         if (fout != nullptr)
             *fout << t.first << t.second << L" " << t.p << L" " << t.count << endl;
     }
-    h /= -2.0;
+    h *= -0.5;
     return h;
 }
 
@@ -193,6 +204,15 @@ wstring prepString(const wstring &in) {
         s.push_back(t);
     }
     return s;
+}
+
+double avgLenOfCode(const unordered_map<wchar_t, pair<long long, double>> &symbols,
+                    const unordered_map<wchar_t, std::list<bool>> &codes) {
+    double avgLen = 0;
+    for (const auto &pr : codes) {
+        avgLen += pr.second.size() * symbols.at(pr.first).second;
+    }
+    return avgLen;
 }
 
 void tmp() {
@@ -224,9 +244,9 @@ void tmp() {
         s = prepString(s);
     }
     double h;
-    h = singleEntropy(s, &fout);
+    h = singleEntropy(s);
     fout << L"H = " << h << endl;
-    h = doubleEntropy(s, &fout);
+    h = doubleEntropy(s);
     fout << L"H = " << h << endl;
 
     fout.close();
@@ -235,7 +255,7 @@ void tmp() {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    wifstream fin("f2.txt");
+    wifstream fin("war and peace.txt");
     wofstream fout("out.txt");
     wstring s((istreambuf_iterator<wchar_t>(fin)), (istreambuf_iterator<wchar_t>()));
     s = prepString(s);
@@ -245,8 +265,10 @@ int main() {
     ShannonImpl shannon(s);
     TernaryHuffman ternaryHuffman(s);
 
-    fout << endl;
-    fout << endl;
+    double H1 = singleEntropy(s, true);
+    double H2 = singleEntropy(s, false);
+
+    fout << L"Huffman:" << endl;
     const auto &symbols = huffman.getSymbolsTable();
     auto mp = huffman.getSortedCodes();
     fout.precision(11);
@@ -258,42 +280,16 @@ int main() {
         }
         fout << endl;
     }
+    double avgLen = avgLenOfCode(huffman.getSymbolsTable(), huffman.getCodes());
+    fout << "H = " << H1 << endl;
+    fout << "L(avg) = " << avgLen << endl;
 
     fout << endl;
     fout << endl;
     fout << endl;
     fout << endl;
 
-    mp = ternaryHuffman.getSortedCodes();
-    for (const auto &x : mp) {
-        fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
-             << setw(5) << symbols.at(x.first).first << L"  ";
-        for (const auto &bl : x.second) {
-            fout << bl;
-        }
-        fout << endl;
-    }
-
-    fout << endl;
-    fout << endl;
-    fout << endl;
-    fout << endl;
-
-    auto mp1 = ternaryHuffman.getSortedTernaryCodes();
-    for (const auto &x : mp1) {
-        fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
-             << setw(5) << symbols.at(x.first).first << L"  ";
-        for (const auto &bl : x.second) {
-            fout << bl;
-        }
-        fout << endl;
-    }
-    return 0;
-    fout << endl;
-    fout << endl;
-    fout << endl;
-    fout << endl;
-
+    fout << L"Fano:" << endl;
     mp = fano.getSortedCodes();
     for (const auto &x : mp) {
         fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
@@ -303,12 +299,15 @@ int main() {
         }
         fout << endl;
     }
+    avgLen = avgLenOfCode(fano.getSymbolsTable(), fano.getCodes());
+    fout << "H = " << H1 << endl;
+    fout << "L(avg) = " << avgLen << endl;
 
     fout << endl;
     fout << endl;
     fout << endl;
     fout << endl;
-
+    fout << L"Shannon:" << endl;
     mp = shannon.getSortedCodes();
     for (const auto &x : mp) {
         fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
@@ -318,14 +317,18 @@ int main() {
         }
         fout << endl;
     }
+    avgLen = avgLenOfCode(shannon.getSymbolsTable(), shannon.getCodes());
+    fout << "H = " << H1 << endl;
+    fout << "L(avg) = " << avgLen << endl;
 
     fout << endl;
     fout << endl;
     fout << endl;
     fout << endl;
 
-    mp = hilbertMoore.getSortedCodes();
-    for (const auto &x : mp) {
+    fout << L"Ternary Huffman:" << endl;
+    auto mp1 = ternaryHuffman.getSortedTernaryCodes();
+    for (const auto &x : mp1) {
         fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
              << setw(5) << symbols.at(x.first).first << L"  ";
         for (const auto &bl : x.second) {
@@ -333,6 +336,10 @@ int main() {
         }
         fout << endl;
     }
+    avgLen = avgLenOfCode(ternaryHuffman.getSymbolsTable(), ternaryHuffman.getCodes());
+    fout << "H = " << H2 << endl;
+    fout << "L(avg) = " << avgLen / 2.0 << endl;
+
     fout.close();
     fin.close();
 
