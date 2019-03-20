@@ -11,7 +11,7 @@
 #include <chrono>
 #include <random>
 #include <functional>
-
+#include <fstream>
 double Service::anyEntropy(const std::wstring &s, size_t width, bool binaryLog, std::wofstream *fout) {
     std::function<double(const double)> logX;
     if (binaryLog) {
@@ -86,13 +86,14 @@ double Service::avgLenOfCode(const std::unordered_map<wchar_t, std::pair<long lo
 }
 
 void Service::gen() {
-    freopen("f2.txt", "w", stdout);
+    std::ofstream fout("f1.txt");
     const int size = 20000;
     std::mt19937_64 generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     auto rng = std::bind(distribution, generator);
     std::vector<double> chances;
-    chances.push_back(0.96);
+    chances.push_back(0.86);
+    chances.push_back(0.1);
     chances.push_back(0.01);
     chances.push_back(0.01);
     chances.push_back(0.02);
@@ -110,8 +111,9 @@ void Service::gen() {
     }
     shuffle(v.begin(), v.end(), generator);
     for (auto ch : v) {
-        std::cout << ch;
+        fout << ch;
     }
+    fout.close();
 }
 
 wchar_t Service::to_lower(wchar_t ch) {
