@@ -5,7 +5,6 @@
 #include "TernaryHuffman.h"
 #include <set>
 #include <iostream>
-#include <algorithm>
 
 TernaryHuffman::TernaryHuffman(const std::wstring &text1) : CodeItem(text1) {
     generateCodes();
@@ -62,12 +61,12 @@ const std::vector<std::pair<wchar_t, std::list<bool>>> TernaryHuffman::getSorted
 const std::vector<std::pair<wchar_t, std::list<unsigned short>>> TernaryHuffman::getSortedTernaryCodes() const {
     std::vector<std::pair<wchar_t, std::list<unsigned short>>> v;
     v.reserve(this->codes.size());
-    for (const auto &p : codes) {
+    for (const std::pair<const wchar_t, std::list<bool>> &p : codes) {
         std::list<unsigned short> list;
         for (auto it = p.second.cbegin(); it != p.second.cend(); it = std::next(it, 2)) {
             auto it1 = it;
             it1++;
-            list.push_back(*it << 1 | *it1);
+            list.push_back(static_cast<unsigned short>(*it) << 1 | *it1);
         }
         v.emplace_back(p.first, list);
     }
