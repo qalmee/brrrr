@@ -5,6 +5,7 @@
 #include "TernaryHuffman.h"
 #include <set>
 #include <iostream>
+#include <algorithm>
 
 TernaryHuffman::TernaryHuffman(const std::wstring &text1) : CodeItem(text1) {
     generateCodes();
