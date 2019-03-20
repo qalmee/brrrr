@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <bitset>
 #include <random>
-#include <iostream>
 #include "codes/Huffman.h"
 #include "codes/Fano.h"
 #include "codes/ShannonImpl.h"
@@ -23,15 +22,12 @@ typedef unsigned long long ull;
 typedef pair<ll, ll> pll;
 typedef pair<int, int> pii;
 
-
-
-
 int main() {
     setlocale(LC_ALL, "Russian");
-    wifstream fin("f1.txt");
+    wifstream fin("war and peace.txt");
     wofstream fout("out.txt");
     wstring s((istreambuf_iterator<wchar_t>(fin)), (istreambuf_iterator<wchar_t>()));
-    s = Service::prepString(s);
+    //s = Service::prepString(s);
     Huffman huffman(s);
     HilbertMoore hilbertMoore(s);
     Fano fano(s);
@@ -44,8 +40,9 @@ int main() {
     fout << L"Huffman:" << endl;
     const auto &symbols = huffman.getSymbolsTable();
     auto mp = huffman.getSortedCodes();
-    cout << "ASDASD" << endl;
-    ArchiveManager manager(s, symbols, huffman.getCodes(), nullptr, "dasa");
+
+    ArchiveManager manager(s, symbols, shannon.getCodes());
+
     fout.precision(11);
     for (const auto &x : mp) {
         fout << fixed << x.first << L"  " << symbols.at(x.first).second << L"  "
