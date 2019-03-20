@@ -10,6 +10,8 @@ CodeItem::CodeItem(const std::wstring &text1) : text(text1) {
     for (auto &p : symbolsTable) {
         p.second.second = (double) p.second.first / this->text.size();
     }
+    this->symbolsTable.max_load_factor(0.5);
+    this->codes.max_load_factor(0.5);
 }
 
 const std::unordered_map<wchar_t, std::pair<int64_t, double>> &CodeItem::getSymbolsTable() const {
