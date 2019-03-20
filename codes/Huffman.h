@@ -20,8 +20,6 @@ public:
 
     ~Huffman() override = default;
 
-    Huffman &operator=(const Huffman &huffman);
-
     const std::wstring &getText() const;
 
     const std::vector<std::pair<wchar_t, std::list<bool>>> getSortedCodes() const override;

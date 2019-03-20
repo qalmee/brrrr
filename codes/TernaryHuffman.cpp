@@ -11,12 +11,6 @@ TernaryHuffman::TernaryHuffman(const std::wstring &text1) : CodeItem(text1) {
     generateCodes();
 }
 
-TernaryHuffman &TernaryHuffman::operator=(const TernaryHuffman &huffman) {
-    this->text = huffman.text;
-    this->symbolsTable = huffman.symbolsTable;
-    return *this;
-}
-
 void TernaryHuffman::generateCodes() {
     std::multiset<Node> q;
     for (const auto &p : this->symbolsTable) {
@@ -65,15 +59,15 @@ const std::vector<std::pair<wchar_t, std::list<bool>>> TernaryHuffman::getSorted
     return v;
 }
 
-const std::vector<std::pair<wchar_t, std::list<short>>> TernaryHuffman::getSortedTernaryCodes() const {
-    std::vector<std::pair<wchar_t, std::list<short>>> v;
+const std::vector<std::pair<wchar_t, std::list<unsigned short>>> TernaryHuffman::getSortedTernaryCodes() const {
+    std::vector<std::pair<wchar_t, std::list<unsigned short>>> v;
     v.reserve(this->codes.size());
     for (const auto &p : codes) {
-        std::list<short> list;
+        std::list<unsigned short> list;
         for (auto it = p.second.cbegin(); it != p.second.cend(); it = std::next(it, 2)) {
             auto it1 = it;
             it1++;
-            list.push_back(((unsigned short) *it) << 1 | *it1);
+            list.push_back(*it << 1 | *it1);
         }
         v.emplace_back(p.first, list);
     }

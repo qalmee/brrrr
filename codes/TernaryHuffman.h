@@ -15,13 +15,11 @@ public:
 
     ~TernaryHuffman() override = default;
 
-    TernaryHuffman &operator=(const TernaryHuffman &huffman);
-
     const std::wstring &getText() const;
 
     const std::vector<std::pair<wchar_t, std::list<bool>>> getSortedCodes() const override;
 
-    const std::vector<std::pair<wchar_t, std::list<short>>> getSortedTernaryCodes() const;
+    const std::vector<std::pair<wchar_t, std::list<unsigned short>>> getSortedTernaryCodes() const;
 
 protected:
     void generateCodes() override;

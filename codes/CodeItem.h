@@ -13,9 +13,9 @@
 class CodeItem {
 public:
 
-    explicit CodeItem(std::wstring text1);
+    explicit CodeItem(const std::wstring &text1);
 
-    explicit CodeItem() = default;
+    explicit CodeItem() = delete;
 
     CodeItem(const CodeItem &item) = default;
 
@@ -31,7 +31,7 @@ public:
 protected:
     virtual void generateCodes() = 0;
 
-    std::wstring text;
+    const std::wstring &text;
     std::unordered_map<wchar_t, std::pair<long long, double>> symbolsTable;
     std::unordered_map<wchar_t, std::list<bool>> codes;
 };

@@ -10,12 +10,6 @@ Huffman::Huffman(const std::wstring &text1) : CodeItem(text1) {
     generateCodes();
 }
 
-Huffman &Huffman::operator=(const Huffman &huffman) {
-    this->text = huffman.text;
-    this->symbolsTable = huffman.symbolsTable;
-    return *this;
-}
-
 void Huffman::generateCodes() {
     std::multiset<Node> q;
     for (const auto &p : this->symbolsTable) {

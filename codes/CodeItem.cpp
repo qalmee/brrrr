@@ -4,7 +4,7 @@
 
 #include "CodeItem.h"
 
-CodeItem::CodeItem(std::wstring text1) : text(std::move(text1)) {
+CodeItem::CodeItem(const std::wstring &text1) : text(text1) {
     if (this->text.empty()) {
         throw std::runtime_error("Text is empty");
     }
