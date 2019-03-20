@@ -56,13 +56,19 @@ namespace std {
 
 struct schemaPairItem {
     wchar_t first, second;
-    int count;
+    long long count;
+    double p;
+};
+
+struct schemaAnyItem {
+    wstring sequence;
+    long long count;
     double p;
 };
 
 struct schemaItem {
     wchar_t ch;
-    int count;
+    long long count;
     double p;
 };
 
@@ -152,7 +158,7 @@ double doubleEntropy(const wstring &s, wofstream *fout = nullptr) {
     unordered_map<std::pair<wchar_t, wchar_t>, std::pair<int, double>> m;
     m.reserve(1U << 12);
     for (int i = 0; i < (int) s.size() - 1; i++) {
-        if (s[i + 1] == ' ' || s[i + 1] == 27) {
+        if (s[i + 1] == 27) {
             i++;
             continue;
         }
@@ -165,8 +171,12 @@ double doubleEntropy(const wstring &s, wofstream *fout = nullptr) {
         v.push_back({t.first.first, t.first.second, t.second.first, t.second.first * 1.0 / s.size()});
     }
     sort(v.begin(), v.end(), [](const auto &a, const auto &b) {
-        return a.count < b.count;
+        return a.count > b.count;
     });
+    for (int i = 0; i < 5; i++) {
+        auto t = v[i];
+        wcout << t.first << t.second << L" " << t.p << L" " << t.count << endl;
+    }
     double h = 0;
 //    for (auto &t : m){
 //        t.second.second = t.second.first * 1.0 / s.size();
@@ -179,6 +189,42 @@ double doubleEntropy(const wstring &s, wofstream *fout = nullptr) {
             *fout << t.first << t.second << L" " << t.p << L" " << t.count << endl;
     }
     h *= -0.5;
+    return h;
+}
+
+double anyEntropy(const wstring &s, size_t width = 1, wofstream *fout = nullptr) {
+    wstring sequence;
+    unordered_map<wstring, std::pair<int, double>> m;
+    m.reserve(1U << 10);
+    m.max_load_factor(0.5);
+    for (size_t j = 0; j < width && j < s.size(); j++) {
+        sequence.push_back(s[j]);
+    }
+    for (size_t i = width; i < s.size(); i++) {
+        m[sequence].first++;
+        sequence.erase(sequence.begin());
+        sequence.push_back(s[i]);
+    }
+    m[sequence].first++;
+    vector<schemaAnyItem> v;
+    for (const auto &t : m) {
+        v.push_back({t.first, t.second.first, t.second.first * 1.0 / s.size()});
+    }
+    sort(v.begin(), v.end(), [](const auto &a, const auto &b) {
+        return a.count > b.count;
+    });
+    for (int i = 0; i < 5; i++) {
+        auto t = v[i];
+        wcout << t.sequence << L" " << t.p << L" " << t.count << endl;
+    }
+    double h = 0;
+    for (const auto &t : v) {
+        h += t.p * log2(t.p);
+        if (fout != nullptr)
+            *fout << t.sequence << L" " << t.p << L" " << t.count << endl;
+    }
+    h /= width;
+    h *= -1;
     return h;
 }
 
@@ -259,6 +305,9 @@ int main() {
     wofstream fout("out.txt");
     wstring s((istreambuf_iterator<wchar_t>(fin)), (istreambuf_iterator<wchar_t>()));
     s = prepString(s);
+    fout << singleEntropy(s) << endl << doubleEntropy(s) << endl
+         << anyEntropy(s, 1) << endl << anyEntropy(s, 2) << endl;
+    return 0;
     Huffman huffman(s);
     HilbertMoore hilbertMoore(s);
     Fano fano(s);
@@ -302,6 +351,7 @@ int main() {
     avgLen = avgLenOfCode(fano.getSymbolsTable(), fano.getCodes());
     fout << "H = " << H1 << endl;
     fout << "L(avg) = " << avgLen << endl;
+    //return 0;
 
     fout << endl;
     fout << endl;
