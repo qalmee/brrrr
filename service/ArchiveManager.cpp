@@ -1,12 +1,9 @@
-//
-// Created by margo on 20.03.2019.
-//
 
 #include "ArchiveManager.h"
 #include <iostream>
 
 ArchiveManager::ArchiveManager(const std::wstring &_text,
-                               const std::unordered_map<wchar_t, std::pair<long long int, double>> &_symbolsTale,
+                               const std::unordered_map<wchar_t, std::pair<int64_t, double>> &_symbolsTale,
                                const std::unordered_map<wchar_t, std::list<bool>> &_codes,
                                const char *encodeFileName, const char *decodeFileName) :
         text(_text), symbolsMetrics(_symbolsTale), codes(_codes),
@@ -24,9 +21,9 @@ ArchiveManager::ArchiveManager(const std::wstring &_text,
 
 void ArchiveManager::encode() {
     fEncoded.open(encodeFileName, std::ios_base::out | std::ios_base::binary);
-    unsigned char byteToWrite = 0;
-    unsigned char mask = 1U << (sizeof(unsigned char) * 8 - 1);
-    int bitCount = 0;
+    uint8_t byteToWrite = 0;
+    uint8_t mask = 1U << (sizeof(uint8_t) * 8 - 1);
+    int32_t bitCount = 0;
     for (const auto ch : text) {
         const std::list<bool> &list = codes.at(ch);
         for (const bool val : list) {
@@ -35,11 +32,11 @@ void ArchiveManager::encode() {
             }
             bitCount++;
             mask >>= 1;
-            if (bitCount == sizeof(unsigned char) * 8) {
+            if (bitCount == sizeof(uint8_t) * 8) {
                 fEncoded << byteToWrite;
                 byteToWrite = 0;
                 bitCount = 0;
-                mask = 1U << (sizeof(unsigned char) * 8 - 1);
+                mask = 1U << (sizeof(uint8_t) * 8 - 1);
             }
         }
     }
@@ -50,9 +47,9 @@ void ArchiveManager::encode() {
 void ArchiveManager::decode() {
     fEncoded.open(encodeFileName, std::ios_base::in | std::ios_base::binary);
     fDecoded.open(decodeFileName, std::ios_base::out);
-    unsigned char byteToDecode = 0;
+    uint8_t byteToDecode = 0;
     uint8_t byteMask = 0;
-    unsigned int charsWritten = 0;
+    uint32_t charsWritten = 0;
     std::list<bool> code;
     while (charsWritten < text.size()) {
         if (byteMask == 0) {

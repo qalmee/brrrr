@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #ifndef UNTITLED2_SHANNON_H
 #define UNTITLED2_SHANNON_H
 
@@ -26,10 +22,10 @@ protected:
 
     struct trio {
         long double p;
-        int powerOfTwo;
+        int32_t powerOfTwo;
         wchar_t symbol;
 
-        trio(wchar_t a, long double b, int c) : p(b), powerOfTwo(c), symbol(a) {}
+        trio(wchar_t a, long double b, int32_t c) : p(b), powerOfTwo(c), symbol(a) {}
 
     };
 
@@ -37,9 +33,9 @@ private:
 
     std::function<bool(const trio &, const trio &)> compFuntion;
 
-    int countPowerOfTwo(long double p);
+    int32_t countPowerOfTwo(long double p);
 
-    std::list<bool> getCode(long double p, int l);
+    std::list<bool> getCode(long double p, int32_t l);
 
     std::vector<trio> schema;
 };

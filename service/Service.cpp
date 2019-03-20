@@ -1,7 +1,3 @@
-//
-// Created by margo on 20.03.2019.
-//
-
 
 #include "Service.h"
 #include <vector>
@@ -11,7 +7,7 @@
 #include <chrono>
 #include <random>
 #include <functional>
-#include <fstream>
+
 double Service::anyEntropy(const std::wstring &s, size_t width, bool binaryLog, std::wofstream *fout) {
     std::function<double(const double)> logX;
     if (binaryLog) {
@@ -21,7 +17,7 @@ double Service::anyEntropy(const std::wstring &s, size_t width, bool binaryLog, 
     }
     std::wstring sequence;
     std::unordered_map<std::wstring, std::pair<int, double>> m;
-    m.reserve(1U << 10);
+    m.reserve(1U << 10U);
     m.max_load_factor(0.5);
     for (size_t j = 0; j < width && j < s.size(); j++) {
         sequence.push_back(s[j]);
@@ -75,7 +71,7 @@ std::wstring Service::prepString(const std::wstring &in) {
     return s;
 }
 
-double Service::avgLenOfCode(const std::unordered_map<wchar_t, std::pair<long long, double>> &symbols,
+double Service::avgLenOfCode(const std::unordered_map<wchar_t, std::pair<int64_t, double>> &symbols,
                              const std::unordered_map<wchar_t, std::list<bool>> &codes) {
     //std::unordered_map<std::pair<wchar_t, wchar_t >, int> mp;
     double avgLen = 0;
@@ -87,7 +83,7 @@ double Service::avgLenOfCode(const std::unordered_map<wchar_t, std::pair<long lo
 
 void Service::gen() {
     std::ofstream fout("f1.txt");
-    const int size = 20000;
+    const int32_t size = 20000;
     std::mt19937_64 generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     auto rng = std::bind(distribution, generator);
@@ -99,10 +95,10 @@ void Service::gen() {
     chances.push_back(0.02);
     std::vector<char> v;
     v.reserve(size);
-    for (int i = 0; i < size; i++) {
+    for (int32_t i = 0; i < size; i++) {
         double p = rng();
-        for (int j = 0; j < (int) chances.size(); j++) {
-            if (p - chances[j] <= 0 || j == (int) chances.size() - 1) {
+        for (size_t j = 0; j < chances.size(); j++) {
+            if (p - chances[j] <= 0 || j == chances.size() - 1) {
                 v.push_back((char) ('a' + j));
                 break;
             }
@@ -122,10 +118,10 @@ wchar_t Service::to_lower(wchar_t ch) {
     static const std::wstring s1 = L"абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
     static const std::wstring se = L"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static const std::wstring se1 = L"abcdefghijklmnopqrstuvwxyz";
-    for (static int i = 0; i < (int) s.size(); i++) {
+    for (static size_t i = 0; i < s.size(); i++) {
         m[s[i]] = s1[i];
     }
-    for (static int i = 0; i < (int) se.size(); i++) {
+    for (static size_t i = 0; i < se.size(); i++) {
         m[se[i]] = se1[i];
     }
     if (m.count(ch)) {

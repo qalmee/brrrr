@@ -1,7 +1,3 @@
-//
-// Created by margo on 18.03.2019.
-//
-
 #include "TernaryHuffman.h"
 #include <set>
 #include <iostream>
@@ -59,15 +55,15 @@ const std::vector<std::pair<wchar_t, std::list<bool>>> TernaryHuffman::getSorted
     return v;
 }
 
-const std::vector<std::pair<wchar_t, std::list<unsigned short>>> TernaryHuffman::getSortedTernaryCodes() const {
-    std::vector<std::pair<wchar_t, std::list<unsigned short>>> v;
+const std::vector<std::pair<wchar_t, std::list<uint16_t>>> TernaryHuffman::getSortedTernaryCodes() const {
+    std::vector<std::pair<wchar_t, std::list<uint16_t>>> v;
     v.reserve(this->codes.size());
     for (const std::pair<const wchar_t, std::list<bool>> &p : codes) {
-        std::list<unsigned short> list;
+        std::list<uint16_t> list;
         for (auto it = p.second.cbegin(); it != p.second.cend(); it = std::next(it, 2)) {
             auto it1 = it;
             it1++;
-            list.push_back(static_cast<unsigned short>(*it) << 1 | *it1);
+            list.push_back(static_cast<uint16_t>(*it) << 1U | *it1);
         }
         v.emplace_back(p.first, list);
     }

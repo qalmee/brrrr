@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #ifndef UNTITLED2_HUFFMAN_H
 #define UNTITLED2_HUFFMAN_H
 
@@ -29,10 +25,10 @@ protected:
 
 private:
     struct Node {
-        long long freq;
+        int64_t freq;
         std::list<wchar_t> letters;
 
-        Node(const long long freq, std::list<wchar_t> &&letters) noexcept :
+        Node(const int64_t freq, std::list<wchar_t> &&letters) noexcept :
                 freq(freq), letters(std::move(letters)) {}
 
         Node(const Node &other) noexcept {

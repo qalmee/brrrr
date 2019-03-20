@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #include "ShannonInterface.h"
 
 #include <iostream>
@@ -34,18 +30,18 @@ void ShannonInterface::generateCodes() {
     }
 }
 
-int ShannonInterface::countPowerOfTwo(long double p) {
-    int l = 0;
+int32_t ShannonInterface::countPowerOfTwo(long double p) {
+    int32_t l = 0;
     for (long double val = 1; val > p; val /= 2.0L) {
         l++;
     }
     return l;
 }
 
-std::list<bool> ShannonInterface::getCode(long double p, int l) {
+std::list<bool> ShannonInterface::getCode(long double p, int32_t l) {
     std::list<bool> code;
     long double val = 0.5l;
-    for (int i = 0; i < l; i++) {
+    for (int32_t i = 0; i < l; i++) {
         if (p >= val) {
             p -= val;
             code.push_back(true);

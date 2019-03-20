@@ -1,7 +1,3 @@
-//
-// Created by margo on 16.03.2019.
-//
-
 #ifndef UNTITLED2_SHANNONIMPL_H
 #define UNTITLED2_SHANNONIMPL_H
 

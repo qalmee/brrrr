@@ -1,6 +1,3 @@
-//
-// Created by margo on 20.03.2019.
-//
 
 #ifndef UNTITLED2_COMPRESSER_H
 #define UNTITLED2_COMPRESSER_H
@@ -13,11 +10,11 @@ namespace std {
     template<>
     struct hash<std::list<bool>> {
         size_t operator()(const std::list<bool> &list) const {
-            unsigned long long t = 1;
+            uint64_t t = 1;
             for (const bool val : list) {
                 t = t << 1U | val;
             }
-            return hash<unsigned long long>{}(t);
+            return hash<uint64_t>{}(t);
         }
     };
 }
@@ -27,7 +24,7 @@ public:
     ArchiveManager() = delete;
 
     ArchiveManager(const std::wstring &_text,
-                   const std::unordered_map<wchar_t, std::pair<long long int, double>> &_symbolsTale,
+                   const std::unordered_map<wchar_t, std::pair<int64_t, double>> &_symbolsTale,
                    const std::unordered_map<wchar_t, std::list<bool>> &_codes,
                    const char *encodeFileName = nullptr, const char *decodeFileName = nullptr);
 
@@ -38,7 +35,7 @@ private:
     const std::wstring &text;
     std::fstream fEncoded;
     std::wfstream fDecoded;
-    const std::unordered_map<wchar_t, std::pair<long long, double>> &symbolsMetrics;
+    const std::unordered_map<wchar_t, std::pair<int64_t, double>> &symbolsMetrics;
     const std::unordered_map<wchar_t, std::list<bool>> &codes;
     std::unordered_map<std::list<bool>, wchar_t> symbols;
     const char *encodeFileName, *decodeFileName;

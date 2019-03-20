@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #ifndef UNTITLED2_CODEITEM_H
 #define UNTITLED2_CODEITEM_H
 
@@ -25,14 +21,13 @@ public:
 
     virtual const std::unordered_map<wchar_t, std::list<bool>> &getCodes() const;
 
-    virtual const std::unordered_map<wchar_t, std::pair<long long int, double>> &getSymbolsTable() const;
-
+    virtual const std::unordered_map<wchar_t, std::pair<int64_t, double>> &getSymbolsTable() const;
 
 protected:
     virtual void generateCodes() = 0;
 
     const std::wstring &text;
-    std::unordered_map<wchar_t, std::pair<long long, double>> symbolsTable;
+    std::unordered_map<wchar_t, std::pair<int64_t, double>> symbolsTable;
     std::unordered_map<wchar_t, std::list<bool>> codes;
 };
 

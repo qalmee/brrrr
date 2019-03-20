@@ -1,7 +1,3 @@
-//
-// Created by margo on 16.03.2019.
-//
-
 #ifndef UNTITLED2_HILBERTMOORE_H
 #define UNTITLED2_HILBERTMOORE_H
 

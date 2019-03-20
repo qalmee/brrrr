@@ -1,7 +1,3 @@
-//
-// Created by margo on 20.03.2019.
-//
-
 #ifndef UNTITLED2_SERVICE_H
 #define UNTITLED2_SERVICE_H
 
@@ -9,16 +5,6 @@
 #include <fstream>
 #include <unordered_map>
 #include <list>
-
-namespace std {
-    template<>
-    struct hash<pair<wchar_t, wchar_t>> {
-        size_t operator()(const pair<wchar_t, wchar_t> &a) const {
-            return hash<long long>{}(((size_t)
-            a.first << 32) +a.second);
-        }
-    };
-}
 
 class Service {
 public:
@@ -29,7 +15,7 @@ public:
 
     static std::wstring prepString(const std::wstring &in);
 
-    static double avgLenOfCode(const std::unordered_map<wchar_t, std::pair<long long, double>> &symbols,
+    static double avgLenOfCode(const std::unordered_map<wchar_t, std::pair<int64_t, double>> &symbols,
                                const std::unordered_map<wchar_t, std::list<bool>> &codes);
 
     static void gen();
@@ -41,7 +27,7 @@ public:
 private:
     struct schemaAnyItem {
         std::wstring sequence;
-        long long count;
+        int64_t count;
         double p;
     };
 };

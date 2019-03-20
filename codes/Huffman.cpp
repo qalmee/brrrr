@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #include "Huffman.h"
 #include <set>
 #include <iostream>

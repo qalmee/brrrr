@@ -1,7 +1,3 @@
-//
-// Created by margo on 16.03.2019.
-//
-
 #include "ShannonImpl.h"
 
 ShannonImpl::ShannonImpl(const std::wstring &text1) :

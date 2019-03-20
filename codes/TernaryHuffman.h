@@ -1,7 +1,3 @@
-//
-// Created by margo on 18.03.2019.
-//
-
 #ifndef UNTITLED2_TERNARYHUFFMAN_H
 #define UNTITLED2_TERNARYHUFFMAN_H
 
@@ -19,21 +15,21 @@ public:
 
     const std::vector<std::pair<wchar_t, std::list<bool>>> getSortedCodes() const override;
 
-    const std::vector<std::pair<wchar_t, std::list<unsigned short>>> getSortedTernaryCodes() const;
+    const std::vector<std::pair<wchar_t, std::list<uint16_t>>> getSortedTernaryCodes() const;
 
 protected:
     void generateCodes() override;
 
 private:
     struct Node {
-        long long freq;
+        int64_t freq;
         std::list<wchar_t> letters;
 
         Node() : freq(0) {
 
         }
 
-        Node(const long long freq, std::list<wchar_t> &&letters) noexcept :
+        Node(const int64_t freq, std::list<wchar_t> &&letters) noexcept :
                 freq(freq), letters(std::move(letters)) {}
 
         Node(const Node &other) noexcept {

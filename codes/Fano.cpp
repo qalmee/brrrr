@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #include "Fano.h"
 #include <algorithm>
 #include <iostream>
@@ -23,16 +19,16 @@ void Fano::generateCodes() {
     for (size_t i = 0; i < schema.size(); i++) {
         schemaCumulative[i] = (i != 0 ? schemaCumulative[i - 1] : 0) + symbolsTable[schema[i]].first;
     }
-    if (!schema.empty()) dfs(0, (int) schema.size());
+    if (!schema.empty()) dfs(0, (int32_t) schema.size());
 }
 
-void Fano::dfs(const int start, const int end) {
-    int border = start;
+void Fano::dfs(const int32_t start, const int32_t end) {
+    int32_t border = start;
     for (auto i = start + 1; i < end; i++) {
-        long long leftBorder = schemaCumulative[border] - (start == 0 ? 0 : schemaCumulative[start - 1]);
-        long long rightBorder = schemaCumulative[end - 1] - schemaCumulative[border];
-        long long leftI = schemaCumulative[i] - (start == 0 ? 0 : schemaCumulative[start - 1]);
-        long long rightI = schemaCumulative[end - 1] - schemaCumulative[i];
+        int64_t leftBorder = schemaCumulative[border] - (start == 0 ? 0 : schemaCumulative[start - 1]);
+        int64_t rightBorder = schemaCumulative[end - 1] - schemaCumulative[border];
+        int64_t leftI = schemaCumulative[i] - (start == 0 ? 0 : schemaCumulative[start - 1]);
+        int64_t rightI = schemaCumulative[end - 1] - schemaCumulative[i];
         if (llabs(leftBorder - rightBorder) > llabs(leftI - rightI)) {
             border = i;
         }

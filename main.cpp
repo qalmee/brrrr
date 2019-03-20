@@ -17,8 +17,8 @@
 #define itn int
 #define vecotr vector
 using namespace std;
-typedef long long ll;
-typedef unsigned long long ull;
+typedef int64_t ll;
+typedef uint64_t ull;
 typedef pair<ll, ll> pll;
 typedef pair<int, int> pii;
 

@@ -1,7 +1,3 @@
-//
-// Created by margo on 15.03.2019.
-//
-
 #include "CodeItem.h"
 
 CodeItem::CodeItem(const std::wstring &text1) : text(text1) {
@@ -16,7 +12,7 @@ CodeItem::CodeItem(const std::wstring &text1) : text(text1) {
     }
 }
 
-const std::unordered_map<wchar_t, std::pair<long long int, double>> &CodeItem::getSymbolsTable() const {
+const std::unordered_map<wchar_t, std::pair<int64_t, double>> &CodeItem::getSymbolsTable() const {
     return this->symbolsTable;
 }
 

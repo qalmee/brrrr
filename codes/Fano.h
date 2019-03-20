@@ -1,7 +1,3 @@
-//
-// Created by margo on 14.03.2019.
-//
-
 #ifndef UNTITLED2_FANO_H
 #define UNTITLED2_FANO_H
 
@@ -23,9 +19,9 @@ protected:
 private:
 
     std::vector<wchar_t> schema;
-    std::vector<long long> schemaCumulative;
+    std::vector<int64_t> schemaCumulative;
 
-    void dfs(int start, int end);
+    void dfs(int32_t start, int32_t end);
 };
 
 
