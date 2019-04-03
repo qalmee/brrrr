@@ -9,12 +9,12 @@ ArchiveManager::ArchiveManager(const std::wstring &_text,
         text(_text), symbolsMetrics(_symbolsTale), codes(_codes),
         encodeFileName(encodeFileName == nullptr ? "defaultEncode.MosquitoRar" : encodeFileName),
         decodeFileName(decodeFileName == nullptr ? "defaultDecode.txt" : decodeFileName) {
-    std::cout << this->encodeFileName << std::endl << this->decodeFileName << std::endl;
+    //std::cout << this->encodeFileName << std::endl << this->decodeFileName << std::endl;
     fillSymbols();
     encode();
     decode();
     if (!filesAreEqual()) {
-        std::cout << "Files ! equal" << std::endl;
+        //std::cout << "Files ! equal" << std::endl;
         //throw std::runtime_error("files are not equal");
     }
 }
@@ -31,7 +31,7 @@ void ArchiveManager::encode() {
                 byteToWrite |= mask;
             }
             bitCount++;
-            mask >>= 1;
+            mask >>= 1U;
             if (bitCount == sizeof(uint8_t) * 8) {
                 fEncoded << byteToWrite;
                 byteToWrite = 0;
@@ -59,7 +59,7 @@ void ArchiveManager::decode() {
             byteMask = 1U << (sizeof(uint8_t) * 8 - 1);
         }
         code.push_back((byteToDecode & byteMask) > 0);
-        byteMask >>= 1;
+        byteMask >>= 1U;
         if (symbols.count(code) > 0) {
             fDecoded << symbols[code];
             charsWritten++;

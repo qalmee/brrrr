@@ -17,6 +17,8 @@ public:
 
     const std::vector<std::pair<wchar_t, std::list<uint16_t>>> getSortedTernaryCodes() const;
 
+    const std::unordered_map<wchar_t, std::list<uint16_t>> getMapCodes() const;
+
 protected:
     void generateCodes() override;
 

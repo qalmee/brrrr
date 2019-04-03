@@ -8,35 +8,35 @@
 #include <random>
 #include <functional>
 
-double Service::anyEntropy(const std::wstring &s, size_t width, bool binaryLog, std::wofstream *fout) {
-    std::function<double(const double)> logX;
+long double Service::anyEntropy(const std::wstring &s, size_t width, bool binaryLog, std::wofstream *fout) {
+    std::function<long double(const long double)> logX;
     if (binaryLog) {
-        logX = ::log2;
+        logX = ::log2l;
     } else {
         logX = Service::log3;
     }
     std::wstring sequence;
-    std::unordered_map<std::wstring, std::pair<int, double>> m;
+    std::unordered_map<std::wstring, uint32_t> m;
     m.reserve(1U << 10U);
     m.max_load_factor(0.5);
     for (size_t j = 0; j < width && j < s.size(); j++) {
         sequence.push_back(s[j]);
     }
     for (size_t i = width; i < s.size(); i++) {
-        m[sequence].first++;
+        m[sequence]++;
         sequence.erase(sequence.begin());
         sequence.push_back(s[i]);
     }
-    m[sequence].first++;
+    m[sequence]++;
     std::vector<Service::schemaAnyItem> v;
     for (const auto &t : m) {
-        v.push_back({t.first, t.second.first, t.second.first * 1.0 / s.size()});
+        v.push_back({t.first, t.second, (long double) t.second / (s.size() - width + 1)});
     }
     std::sort(v.begin(), v.end(), [](const auto &a, const auto &b) {
         return a.count > b.count;
     });
 
-    double h = 0;
+    long double h = 0;
     for (const auto &t : v) {
         h += t.p * logX(t.p);
         if (fout != nullptr)
@@ -81,25 +81,32 @@ double Service::avgLenOfCode(const std::unordered_map<wchar_t, std::pair<int64_t
     return avgLen;
 }
 
+double Service::avgLenOfCode(const std::map<std::wstring, std::pair<int64_t, double>> &symbols,
+                             const std::map<std::wstring, std::list<bool>> &codes) {
+    //std::unordered_map<std::pair<wchar_t, wchar_t >, int> mp;
+    double avgLen = 0;
+    for (const auto &pr : codes) {
+        avgLen += pr.second.size() * symbols.at(pr.first).second;
+    }
+    return avgLen;
+}
+
 void Service::gen() {
-    std::ofstream fout("f1.txt");
-    const int32_t size = 20000;
+    std::ofstream fout("f3.txt");
+    const int32_t size = 30000;
     std::mt19937_64 generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     auto rng = std::bind(distribution, generator);
     std::vector<double> chances;
-    chances.push_back(0.86);
-    chances.push_back(0.1);
-    chances.push_back(0.01);
-    chances.push_back(0.01);
-    chances.push_back(0.02);
+    chances.push_back(0.5);
+    chances.push_back(0.5);
     std::vector<char> v;
     v.reserve(size);
     for (int32_t i = 0; i < size; i++) {
         double p = rng();
         for (size_t j = 0; j < chances.size(); j++) {
             if (p - chances[j] <= 0 || j == chances.size() - 1) {
-                v.push_back((char) ('a' + j));
+                v.push_back((char) ('0' + j));
                 break;
             }
             p -= chances[j];
@@ -130,6 +137,6 @@ wchar_t Service::to_lower(wchar_t ch) {
     return ch;
 }
 
-double Service::log3(const double x) {
+long double Service::log3(const long double x) {
     return log(x) / log(3.0);
 }

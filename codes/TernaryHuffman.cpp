@@ -72,3 +72,18 @@ const std::vector<std::pair<wchar_t, std::list<uint16_t>>> TernaryHuffman::getSo
     });
     return v;
 }
+
+const std::unordered_map<wchar_t, std::list<uint16_t>> TernaryHuffman::getMapCodes() const {
+    std::unordered_map<wchar_t, std::list<uint16_t>> v;
+    v.reserve(this->codes.size());
+    for (const std::pair<const wchar_t, std::list<bool>> &p : codes) {
+        std::list<uint16_t> list;
+        for (auto it = p.second.cbegin(); it != p.second.cend(); it = std::next(it, 2)) {
+            auto it1 = it;
+            it1++;
+            list.push_back(static_cast<uint16_t>(*it) << 1U | *it1);
+        }
+        v[p.first] = list;
+    }
+    return v;
+}
