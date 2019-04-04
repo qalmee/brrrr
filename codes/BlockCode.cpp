@@ -8,7 +8,7 @@
 BlockCode::BlockCode(const std::wstring &s, const int32_t blockSize_) :
         CodeItem(s), blockSize(blockSize_) {
     generateCodes();
-    std::cout << text.size() << std::endl;
+//    std::cout << text.size() << std::endl;
 }
 
 const std::vector<std::pair<wchar_t, std::list<bool>>> BlockCode::getSortedCodes() const {
@@ -30,10 +30,11 @@ void BlockCode::generateCodes() {
     }
     double cml = 0;
     for (auto &pair : blockTable) {
+        cml += pair.second.second / 2.0;
         blockCodes[pair.first] = getCode(cml, countPowerOfTwo(pair.second.second));
-        cml += pair.second.second;
+        cml += pair.second.second / 2.0;
     }
-    std::cout << "check = " << cml << std::endl;
+//    std::cout << "check = " << cml << std::endl;
 }
 
 const std::map<std::wstring, std::list<bool>> &BlockCode::getBlockCodes() const {

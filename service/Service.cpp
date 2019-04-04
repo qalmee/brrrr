@@ -98,8 +98,8 @@ void Service::gen() {
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     auto rng = std::bind(distribution, generator);
     std::vector<double> chances;
-    chances.push_back(0.5);
-    chances.push_back(0.5);
+    chances.push_back(0.7);
+    chances.push_back(0.3);
     std::vector<char> v;
     v.reserve(size);
     for (int32_t i = 0; i < size; i++) {
